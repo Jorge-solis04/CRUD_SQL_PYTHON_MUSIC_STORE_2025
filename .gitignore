@@ -10,5 +10,6 @@ __pycache__/
 Thumbs.db
 
 # Archivos de configuración de entorno
+config.py
 .env
 *.db
