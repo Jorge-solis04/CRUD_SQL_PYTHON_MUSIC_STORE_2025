@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html>
-<head><title>Usuarios</title></head>
-<body>
-    <h1>Lista de Clientes</h1>
-    <ul>
-        {% for u in clientes %}
-            <li>{{ u.nombre }} - {{ u.telefono }}</li>
-        {% endfor %}
-    </ul>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!--Codigo de python para mostrar mensajes al agregar clientes-->
+    {% with messages = get_flashed_messages() %} 
+    {% if messages %} 
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %} 
+    {% endif %} 
+    {% endwith %}
+    <form action="/addClient" method="post">
+      <input type="text" name="nombre" placeholder="Nombre Completo" />
+      <input type="text" name="correo" placeholder="Correo Electronico" />
+      <input type="text" name="telefono" placeholder="Telefono" />
+      <input type="text" name="direccion" placeholder="Direccion" />
+      <button type="submit">Guardar</button>
+    </form>
+  </body>
 </html>
