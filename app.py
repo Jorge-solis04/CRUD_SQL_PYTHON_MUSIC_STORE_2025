@@ -19,9 +19,17 @@ def get_connection():
 # settings
 app.secret_key = 'mySecretKey'
 
+#rutas de la pagina hueb
 @app.route('/')
 def index():
-    return render_template('index.html')
+    
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM clientes')
+    data = cur.fetchall()
+    print(data)
+    
+    return render_template('index.html', clientes = data)
 
 @app.route('/addClient' , methods = ['POST'])
 def addClient():
@@ -42,6 +50,17 @@ def addClient():
         
         return redirect(url_for('index'))
     
+@app.route('/delete/<string:id_cliente>')
+def deleteClient(id_cliente):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute('DELETE FROM clientes WHERE id_cliente = (%s)', (id_cliente,))
+    conn.commit()
+    flash('Cliente Eliminado Exitosamente')
+    
+    return redirect(url_for('index'))
+    
+
 
 if __name__ == '__main__':
-    app.run(port = 3000 ,debug=True)
+    app.run(port = 5000, debug=True)

@@ -21,5 +21,31 @@
       <input type="text" name="direccion" placeholder="Direccion" />
       <button type="submit">Guardar</button>
     </form>
+
+    <table>
+        <thead>
+            <tr>
+                <td>Nombre</td>
+                <td>Correo</td>
+                <td>Telefono</td>
+                <td>Direccion</td>
+                <td>Operaciones</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clientes %}
+            <tr>
+                <td>{{ client.nombre }}</td>
+                <td>{{ client.correo }}</td>
+                <td>{{ client.telefono }}</td>
+                <td>{{ client.direccion }}</td>
+                <td>
+                <a href="/edit/{{client.id_cliente}}"> Editar </a>
+                <a href="/delete/{{client.id_cliente}}"> Borrar </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
   </body>
 </html>
