@@ -60,7 +60,34 @@ def deleteClient(id_cliente):
     
     return redirect(url_for('index'))
     
+@app.route('/edit/<string:id_cliente>')
+def getClient(id_cliente):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM clientes WHERE id_cliente = %s', (id_cliente,))
+    data = cur.fetchall()
+    
+    return render_template('editClient.html', cliente = data[0])
 
+@app.route('/update/<string:id_cliente>', methods = ['POST'])
+def updateClient(id_cliente):
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        correo = request.form['correo']
+        telefono = request.form['telefono']
+        direccion = request.form['direccion']
+        conn=get_connection()
+        cur=conn.cursor()
+        cur.execute("""
+        UPDATE clientes
+        SET nombre = %s,
+        correo = %s,
+        telefono = %s,
+        direccion = %s
+        WHERE id_cliente = %s        
+        """, (nombre, correo, telefono, direccion, id_cliente,))
+        conn.commit()
+        return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(port = 5000, debug=True)
