@@ -1,51 +1,174 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Melody Market - Tienda Musical</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/index.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
   </head>
   <body>
-    <!--Codigo de python para mostrar mensajes al agregar clientes-->
-    {% with messages = get_flashed_messages() %} 
-    {% if messages %} 
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %} 
-    {% endif %} 
-    {% endwith %}
-    <form action="/addClient" method="post">
-      <input type="text" name="nombre" placeholder="Nombre Completo" />
-      <input type="text" name="correo" placeholder="Correo Electronico" />
-      <input type="text" name="telefono" placeholder="Telefono" />
-      <input type="text" name="direccion" placeholder="Direccion" />
-      <button type="submit">Guardar</button>
-    </form>
+    <div class="music-background">
+      <div class="music-note note-1"><i class="fas fa-music"></i></div>
+      <div class="music-note note-2"><i class="fas fa-music"></i></div>
+      <div class="music-note note-3"><i class="fas fa-music"></i></div>
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <td>Nombre</td>
-                <td>Correo</td>
-                <td>Telefono</td>
-                <td>Direccion</td>
-                <td>Operaciones</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for client in clientes %}
-            <tr>
-                <td>{{ client.nombre }}</td>
-                <td>{{ client.correo }}</td>
-                <td>{{ client.telefono }}</td>
-                <td>{{ client.direccion }}</td>
-                <td>
-                <a href="/edit/{{client.id_cliente}}"> Editar </a>
-                <a href="/delete/{{client.id_cliente}}"> Borrar </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <header class="encabezado">
+      <div class="logo">
+        <i class="fas fa-guitar"></i>
+        <div>
+          <h1>Melody Market</h1>
+          <p class="slogan">
+            Tu tienda de discos digitales e instrumentos de calidad
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <section class="filtro">
+      <div class="filter-container">
+        <label for="tablaFiltro"
+          ><i class="fas fa-filter"></i> Filtrar por categoría:</label
+        >
+        <select id="tablaFiltro" class="styled-select">
+          <option value="clientes">
+            <i class="fas fa-users"></i> Clientes
+          </option>
+          <option value="discos">
+            <i class="fas fa-compact-disc"></i> Discos
+          </option>
+          <option value="instrumentos">
+            <i class="fas fa-guitar"></i> Instrumentos
+          </option>
+          <option value="ventas"><i class="fas fa-receipt"></i> Ventas</option>
+          <option value="empleados">
+            <i class="fas fa-user-tie"></i> Empleados
+          </option>
+          <option value="proveedores">
+            <i class="fas fa-truck"></i> Proveedores
+          </option>
+        </select>
+      </div>
+    </section>
+
+    <main class="contenido">
+      <div class="contenedor-flex">
+        <!-- Formulario para agregar usuario -->
+        <div class="formulario-agregar">
+          <h2>Agregar Cliente</h2>
+          <form
+            action="{{ url_for('addClient') }}"
+            method="POST"
+            autocomplete="off"
+          >
+            <div>
+              <label for="nombre">Nombre:</label>
+              <input type="text" id="nombre" name="nombre" required />
+            </div>
+            <div>
+              <label for="correo">Correo:</label>
+              <input type="email" id="correo" name="correo" required />
+            </div>
+            <div>
+              <label for="telefono">Teléfono:</label>
+              <input type="text" id="telefono" name="telefono" required />
+            </div>
+            <div>
+              <label for="direccion">Dirección:</label>
+              <input type="text" id="direccion" name="direccion" required />
+            </div>
+            <button type="submit" class="btn-edit">
+              <i class="fas fa-plus"></i> Agregar
+            </button>
+          </form>
+        </div>
+        <!-- Lista de clientes -->
+        <div class="lista-clientes">
+          {% for client in clientes %}
+          <div class="info-cliente">
+            <div class="datos">
+              <h3>
+                <i class="fas fa-user-circle"></i> Información del Cliente
+              </h3>
+              <div class="info-item">
+                <i class="fas fa-user"></i>
+                <p><strong>Nombre:</strong> {{ client.nombre }}</p>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-phone"></i>
+                <p><strong>Telefono:</strong> {{ client.telefono }}</p>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-envelope"></i>
+                <p><strong>Email:</strong> {{ client.correo }}</p>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <p><strong>Dirección:</strong> {{ client.direccion }}</p>
+              </div>
+            </div>
+            <div class="botones">
+              <a
+                href="/edit/{{client.idCliente}}"
+                onclick="editarCliente()"
+                class="btn-edit"
+              >
+                <i class="fas fa-edit"></i> Editar
+              </a>
+              <a
+                href="/delete/{{client.idCliente}}"
+                onclick="borrarCliente()"
+                class="btn-delete"
+              >
+                <i class="fas fa-trash-alt"></i> Borrar
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function editarCliente() {
+        // Simulación de edición con animación
+        const clienteInfo = document.querySelector(".info-cliente");
+        clienteInfo.style.transform = "scale(0.98)";
+        clienteInfo.style.boxShadow = "0 0 10px rgba(74, 144, 226, 0.5)";
+
+        setTimeout(() => {
+          clienteInfo.style.transform = "scale(1)";
+          clienteInfo.style.boxShadow = "none";
+          alert("Modo edición activado. (Simulación)");
+        }, 300);
+      }
+
+      function borrarCliente() {
+        if (confirm("¿Estás seguro de borrar este cliente?")) {
+          const clienteInfo = document.querySelector(".info-cliente");
+          clienteInfo.style.animation = "fadeOut 0.5s forwards";
+
+          setTimeout(() => {
+            alert("Cliente borrado. (Simulación)");
+            clienteInfo.style.display = "none";
+          }, 500);
+        }
+      }
+
+      // Agregar animación para el select
+      document
+        .getElementById("tablaFiltro")
+        .addEventListener("change", function () {
+          const mainContent = document.querySelector(".contenido");
+          mainContent.style.animation = "fadeIn 0.5s";
+        });
+    </script>
   </body>
 </html>
