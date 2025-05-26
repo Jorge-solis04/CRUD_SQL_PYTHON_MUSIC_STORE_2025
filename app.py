@@ -116,5 +116,9 @@ def updateClient(idCliente):
         conn.commit()
         return redirect(url_for('home'))
 
+@app.route('/product')
+def product():
+    return render_template('product.html')
+
 if __name__ == '__main__':
     app.run(port = 5000, debug=True)
