@@ -116,9 +116,19 @@ def updateClient(idCliente):
         conn.commit()
         return redirect(url_for('home'))
 
-@app.route('/product')
-def product():
+
+@app.route('/products')
+def products():
+    conn=get_connection()
+    cur=conn.cursor()
+    cur.execute("SELECT * FROM vinyl")
+    data=cur.fetchall()
+    
+    print(data)
+    
     return render_template('product.html')
+
+
 
 if __name__ == '__main__':
     app.run(port = 5000, debug=True)
