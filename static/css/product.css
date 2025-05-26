@@ -1,0 +1,83 @@
+/* Estilos específicos para productos */
+.info-producto {
+  display: flex;
+  margin-top: 10px;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 100%;
+}
+
+.lista-productos {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Iconos específicos para productos */
+.fa-record-vinyl {
+  color: #1a2a6c;
+}
+
+.fa-compact-disc {
+  color: #b21f1f;
+}
+
+.fa-tape {
+  color: #fdbb2d;
+}
+
+/* Estilos para el select dentro del formulario */
+.formulario-agregar select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 15px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+}
+
+/* Efecto hover para productos */
+.info-producto:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive para productos */
+@media (max-width: 768px) {
+  .info-producto {
+    flex-direction: column;
+  }
+  
+  .botones {
+    flex-direction: row;
+    margin-top: 20px;
+    justify-content: space-between;
+  }
+  
+  .btn-edit, .btn-delete {
+    width: 48%;
+  }
+}
+
+@media (max-width: 480px) {
+  .info-producto {
+    padding: 20px 15px;
+  }
+  
+  .botones {
+    flex-direction: column;
+  }
+  
+  .btn-edit, .btn-delete {
+    width: 100%;
+  }
+}

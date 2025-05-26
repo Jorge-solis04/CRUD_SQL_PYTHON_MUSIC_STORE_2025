@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Melody Market - Productos</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/product.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="music-background">
+      <div class="music-note note-1"><i class="fas fa-music"></i></div>
+      <div class="music-note note-2"><i class="fas fa-music"></i></div>
+      <div class="music-note note-3"><i class="fas fa-music"></i></div>
+    </div>
+
+    <header class="encabezado">
+      <div class="logo">
+        <i class="fas fa-guitar"></i>
+        <div>
+          <h1>Melody Market</h1>
+          <p class="slogan">
+            Tu tienda de discos digitales e instrumentos de calidad
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <section class="filtro">
+      <div class="filter-container">
+        <label for="tablaFiltro"
+          ><i class="fas fa-filter"></i> Filtrar por categoría:</label
+        >
+        <select id="tablaFiltro" class="styled-select">
+          <option value="todos">Todos los productos</option>
+          <option value="vinilo"><i class="fas fa-record-vinyl"></i> Vinilos</option>
+          <option value="cd"><i class="fas fa-compact-disc"></i> CDs</option>
+          <option value="cassette"><i class="fas fa-tape"></i> Cassettes</option>
+        </select>
+      </div>
+    </section>
+
+    <main class="contenido">
+      <div class="contenedor-flex">
+        <!-- Formulario para agregar producto -->
+        <div class="formulario-agregar">
+          <h2>Agregar Producto</h2>
+          <form
+            action="{{ url_for('addProduct') }}"
+            method="POST"
+            autocomplete="off"
+          >
+            <div>
+              <label for="nombre">Nombre:</label>
+              <input type="text" id="nombre" name="nombre" required />
+            </div>
+            <div>
+              <label for="artista">Artista:</label>
+              <input type="text" id="artista" name="artista" required />
+            </div>
+            <div>
+              <label for="tipo">Tipo:</label>
+              <select id="tipo" name="tipo" class="styled-select" required>
+                <option value="vinilo">Vinilo</option>
+                <option value="cd">CD</option>
+                <option value="cassette">Cassette</option>
+              </select>
+            </div>
+            <div>
+              <label for="precio">Precio ($):</label>
+              <input type="number" id="precio" name="precio" step="0.01" required />
+            </div>
+            <div>
+              <label for="stock">Stock:</label>
+              <input type="number" id="stock" name="stock" required />
+            </div>
+            <div>
+              <label for="genero">Género:</label>
+              <input type="text" id="genero" name="genero" required />
+            </div>
+            <button type="submit" class="btn-edit">
+              <i class="fas fa-plus"></i> Agregar
+            </button>
+          </form>
+        </div>
+        <!-- Lista de productos -->
+        <div class="lista-productos">
+          {% for producto in productos %}
+          <div class="info-producto">
+            <div class="datos">
+              <h3>
+                <i class="fas fa-{{ 'record-vinyl' if producto.tipo == 'vinilo' else 'compact-disc' if producto.tipo == 'cd' else 'tape' }}"></i> {{ producto.nombre }}
+              </h3>
+              <div class="info-item">
+                <i class="fas fa-user"></i>
+                <p><strong>Artista:</strong> {{ producto.artista }}</p>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-tag"></i>
+                <p><strong>Tipo:</strong> {{ producto.tipo|capitalize }}</p>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-dollar-sign"></i>
+                <p><strong>Precio:</strong> ${{ "%.2f"|format(producto.precio) }}</p>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-boxes"></i>
+                <p><strong>Stock:</strong> {{ producto.stock }} unidades</p>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-music"></i>
+                <p><strong>Género:</strong> {{ producto.genero }}</p>
+              </div>
+            </div>
+            <div class="botones">
+              <a
+                href="/editProduct/{{producto.idProducto}}"
+                onclick="editarProducto()"
+                class="btn-edit"
+              >
+                <i class="fas fa-edit"></i> Editar
+              </a>
+              <a
+                href="/deleteProduct/{{producto.idProducto}}"
+                onclick="borrarProducto()"
+                class="btn-delete"
+              >
+                <i class="fas fa-trash-alt"></i> Borrar
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </main>
+
+    <footer class="pie">
+      <div class="footer-content">
+        <p>&copy; 2023 Melody Market. Todos los derechos reservados.</p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      function editarProducto() {
+        // Simulación de edición con animación
+        const productoInfo = document.querySelector(".info-producto");
+        productoInfo.style.transform = "scale(0.98)";
+        productoInfo.style.boxShadow = "0 0 10px rgba(74, 144, 226, 0.5)";
+
+        setTimeout(() => {
+          productoInfo.style.transform = "scale(1)";
+          productoInfo.style.boxShadow = "none";
+          alert("Modo edición activado. (Simulación)");
+        }, 300);
+      }
+
+      function borrarProducto() {
+        if (confirm("¿Estás seguro de borrar este producto?")) {
+          const productoInfo = document.querySelector(".info-producto");
+          productoInfo.style.animation = "fadeOut 0.5s forwards";
+
+          setTimeout(() => {
+            alert("Producto borrado. (Simulación)");
+            productoInfo.style.display = "none";
+          }, 500);
+        }
+      }
+
+      // Filtrado de productos
+      document
+        .getElementById("tablaFiltro")
+        .addEventListener("change", function () {
+          const tipo = this.value;
+          const productos = document.querySelectorAll(".info-producto");
+          
+          productos.forEach(producto => {
+            const productoTipo = producto.querySelector(".info-item:nth-child(3) p").textContent.toLowerCase();
+            if (tipo === "todos" || productoTipo.includes(tipo)) {
+              producto.style.display = "flex";
+              producto.style.animation = "fadeIn 0.5s";
+            } else {
+              producto.style.display = "none";
+            }
+          });
+        });
+    </script>
+  </body>
+</html>
