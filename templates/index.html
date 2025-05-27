@@ -28,8 +28,10 @@
           <p class="slogan">
             Tu tienda de discos digitales e instrumentos de calidad
           </p>
+          <h3>Bienvenido {{current_user.fullname}}</h3>
         </div>
       </div>
+      <a href="{{url_for('logout')}}">Logout</a>
     </header>
 
     <section class="filtro">
