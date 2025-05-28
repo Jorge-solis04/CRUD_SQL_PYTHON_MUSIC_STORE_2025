@@ -14,6 +14,7 @@
     />
   </head>
   <body>
+    
     <div class="music-background">
       <div class="music-note note-1"><i class="fas fa-music"></i></div>
       <div class="music-note note-2"><i class="fas fa-music"></i></div>
@@ -21,20 +22,18 @@
     </div>
 
     <div class="login-container">
+      
       <div class="login-header">
         <div class="logo">
           <i class="fas fa-guitar"></i>
+          
           <h1>Inicio de Sesión</h1>
         </div>
         <p>Tu tienda de instrumentos y música digital</p>
       </div>
 
       <form id="loginForm" class="login-form" action="/login" method="POST">
-        <div class="form-group">
-          <label for="username"
-            ><i class="fas fa-user"></i> Usuario o Email</label
-          >
-          {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages() %}
           {% if messages %}
           <br>
           {% for message in messages %}
@@ -44,6 +43,11 @@
           {% endfor %}
           {% endif %}
           {% endwith %}
+        <div class="form-group">
+          <label for="username"
+            ><i class="fas fa-user"></i> Usuario o Email</label
+          >
+          
           <input
             type="text"
             id="username"
@@ -59,7 +63,7 @@
             type="password"
             id="password"
             name="password"
-            placeholder="••••••••"
+            placeholder="Contraseña"
             required
           />
           <button type="button" class="show-password" id="showPassword">
@@ -67,12 +71,6 @@
           </button>
         </div>
 
-        <div class="form-options">
-          <label>
-            <input type="checkbox" name="remember" /> Recordar sesión
-          </label>
-          <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
-        </div>
 
         <button type="submit" class="login-button">
           <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
