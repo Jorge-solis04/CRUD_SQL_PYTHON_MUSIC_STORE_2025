@@ -1,0 +1,50 @@
+<form action="" method="POST" autocomplete="off">
+    <div>
+        <label for="nombre">Nombre: </label>
+        <input 
+        type="text"
+        id="nombre"
+        name="nombre"
+        value="{{ album.nombre }}"
+        required>
+    </div>
+    <div>
+        <label for="artista">Artista: </label>
+        <input 
+        type="text"
+        id="artista"
+        name="artista"
+        value="{{ album.artista }}"
+        required>
+    </div>
+    <div>
+        <label for="año">Año: </label>
+        <input 
+        type="text"
+        id="año"
+        name="año"
+        value="{{ album.anio }}"
+        required>
+    </div>
+    <div>
+        <label for="genero">Genero: </label>
+        <input 
+        type="text"
+        id="genero"
+        name="genero"
+        value="{{ album.genero }}"
+        required>
+    </div>
+    <div>
+        <label for="disquera">Disquera: </label>
+        <input 
+        type="text"
+        id="disquera"
+        name="disquera"
+        value="{{ album.disquera }}"
+        required>
+    </div>
+    <button type="submit" class="btn-edit">
+    <i class="fas fa-plus"></i> Editar
+  </button>
+</form>
