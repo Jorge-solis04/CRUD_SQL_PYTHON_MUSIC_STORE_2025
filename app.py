@@ -137,15 +137,54 @@ def updateClient(idCliente):
 
 
 @app.route('/products')
-@login_required
-def products():
-    conn=get_connection()
-    cur=conn.cursor()
-    cur.execute("SELECT * FROM vinyl")
-    data=cur.fetchall()
-    
-    print(data)
-    return render_template('product.html')
+def productos():
+    filtro = request.args.get('filtro', 'todos')
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    if filtro == 'vinilo':
+        cursor.execute("""
+            SELECT 'vinilo' AS tipo, v.idVinyl AS id, a.nombre AS album, v.precio, v.stock
+            FROM vinyl v
+            JOIN album a ON v.idAlbum = a.idAlbum
+        """)
+    elif filtro == 'cd':
+        cursor.execute("""
+            SELECT 'cd' AS tipo, c.idCD AS id, a.nombre AS album, c.precio, c.stock
+            FROM cd c
+            JOIN album a ON c.idAlbum = a.idAlbum
+        """)
+    elif filtro == 'casete':
+        cursor.execute("""
+            SELECT 'casete' AS tipo, cs.idCasete AS id, a.nombre AS album, cs.precio, cs.stock
+            FROM casete cs
+            JOIN album a ON cs.idAlbum = a.idAlbum
+        """)
+    else:
+        cursor.execute("""
+            SELECT 'vinilo' AS tipo, v.idVinyl AS id, a.nombre AS album, v.precio, v.stock
+            FROM vinyl v
+            JOIN album a ON v.idAlbum = a.idAlbum
+
+            UNION ALL
+
+            SELECT 'cd' AS tipo, c.idCD AS id, a.nombre AS album, c.precio, c.stock
+            FROM cd c
+            JOIN album a ON c.idAlbum = a.idAlbum
+
+            UNION ALL
+
+            SELECT 'casete' AS tipo, cs.idCasete AS id, a.nombre AS album, cs.precio, cs.stock
+            FROM casete cs
+            JOIN album a ON cs.idAlbum = a.idAlbum
+        """)
+
+    productos = cursor.fetchall()
+    conn.close()
+
+    return render_template('product.html', productos=productos, filtro=filtro)
+
 
 
 def status_401(error):

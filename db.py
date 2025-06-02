@@ -10,3 +10,4 @@ def get_connection():
         port=config.MYSQL_PORT,
         cursorclass=pymysql.cursors.DictCursor
     )
+    

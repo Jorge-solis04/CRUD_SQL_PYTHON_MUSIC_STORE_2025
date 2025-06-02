@@ -24,22 +24,31 @@
         <p class="slogan">Gestión de Productos Musicales</p>
       </div>
     </div>
+    <a href="/home" id="pageSelection">Clientes</a>
   </header>
 
-  <!-- Filtro de productos -->
-  <section class="filtro">
-    <div class="filter-container">
+<section class="filtro">
+  <div class="filter-container">
+    <form id="filterForm" method="GET" action="{{ url_for('productos') }}">
       <label for="tipo-producto">
         <i class="fas fa-filter"></i> Filtrar por:
       </label>
-      <select id="tipo-producto" class="styled-select">
-        <option value="todos">Todos los productos</option>
-        <option value="vinilo">Vinilos</option>
-        <option value="cd">CDs</option>
-        <option value="casete">Casetes</option>
+      <select id="tipo-producto" name="filtro" class="styled-select">
+        <option value="todos" {% if filtro == 'todos' %}selected{% endif %}>Todos los productos</option>
+        <option value="vinilo" {% if filtro == 'vinilo' %}selected{% endif %}>Vinilos</option>
+        <option value="cd" {% if filtro == 'cd' %}selected{% endif %}>CDs</option>
+        <option value="casete" {% if filtro == 'casete' %}selected{% endif %}>Casetes</option>
       </select>
-    </div>
-  </section>
+    </form>
+  </div>
+</section>
+
+<script>
+  document.getElementById("tipo-producto").addEventListener("change", function () {
+    document.getElementById("filterForm").submit();
+  });
+</script>
+
 
   <!-- Contenido principal -->
   <main class="contenido">
@@ -86,7 +95,8 @@
 
       <!-- Lista de productos -->
       <section class="lista-productos">
-        <div class="info-cliente">
+        {% for item in productos %}
+        <div class="info-cliente" id="vinyl">
           <div class="datos">
             <h3><i class="fas fa-compact-disc"></i> Lista de Productos</h3>
             
@@ -94,23 +104,19 @@
             <div class="producto-item">
               <div class="info-item">
                 <i class="fas fa-record-vinyl"></i>
-                <span><strong>Álbum:</strong> The Dark Side of the Moon</span>
-              </div>
-              <div class="info-item">
-                <i class="fas fa-user"></i>
-                <span><strong>Artista:</strong> Pink Floyd</span>
+                <span><strong>Álbum:</strong> {{item.album }}</span>
               </div>
               <div class="info-item">
                 <i class="fas fa-tag"></i>
-                <span><strong>Tipo:</strong> Vinilo</span>
+                <span><strong>Tipo: </strong>{{item.tipo}} </span>
               </div>
               <div class="info-item">
                 <i class="fas fa-dollar-sign"></i>
-                <span><strong>Precio:</strong> $24.99</span>
+                <span><strong>Precio:</strong> {{item.precio}} </span>
               </div>
               <div class="info-item">
                 <i class="fas fa-boxes"></i>
-                <span><strong>Stock:</strong> 35</span>
+                <span><strong>Stock:</strong> {{item.stock}}</span>
               </div>
             </div>
             
@@ -124,80 +130,8 @@
             </div>
           </div>
         </div>
-        
-        <!-- Producto 2 -->
-        <div class="info-cliente">
-          <div class="datos">
-            <div class="producto-item">
-              <div class="info-item">
-                <i class="fas fa-compact-disc"></i>
-                <span><strong>Álbum:</strong> Back in Black</span>
-              </div>
-              <div class="info-item">
-                <i class="fas fa-user"></i>
-                <span><strong>Artista:</strong> AC/DC</span>
-              </div>
-              <div class="info-item">
-                <i class="fas fa-tag"></i>
-                <span><strong>Tipo:</strong> CD</span>
-              </div>
-              <div class="info-item">
-                <i class="fas fa-dollar-sign"></i>
-                <span><strong>Precio:</strong> $14.99</span>
-              </div>
-              <div class="info-item">
-                <i class="fas fa-boxes"></i>
-                <span><strong>Stock:</strong> 42</span>
-              </div>
-            </div>
-            
-            <div class="botones">
-              <button class="btn-edit">
-                <i class="fas fa-edit"></i> Editar
-              </button>
-              <button class="btn-delete">
-                <i class="fas fa-trash-alt"></i> Eliminar
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Producto 3 -->
-        <div class="info-cliente">
-          <div class="datos">
-            <div class="producto-item">
-              <div class="info-item">
-                <i class="fas fa-tape"></i>
-                <span><strong>Álbum:</strong> Nevermind</span>
-              </div>
-              <div class="info-item">
-                <i class="fas fa-user"></i>
-                <span><strong>Artista:</strong> Nirvana</span>
-              </div>
-              <div class="info-item">
-                <i class="fas fa-tag"></i>
-                <span><strong>Tipo:</strong> Casete</span>
-              </div>
-              <div class="info-item">
-                <i class="fas fa-dollar-sign"></i>
-                <span><strong>Precio:</strong> $12.99</span>
-              </div>
-              <div class="info-item">
-                <i class="fas fa-boxes"></i>
-                <span><strong>Stock:</strong> 18</span>
-              </div>
-            </div>
-            
-            <div class="botones">
-              <button class="btn-edit">
-                <i class="fas fa-edit"></i> Editar
-              </button>
-              <button class="btn-delete">
-                <i class="fas fa-trash-alt"></i> Eliminar
-              </button>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
+
       </section>
     </div>
   </main>
@@ -215,6 +149,6 @@
     </div>
   </footer>
 
-  <script src="{{ url_for('static', filename='js/products.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/productos.js') }}"></script>
 </body>
 </html>
