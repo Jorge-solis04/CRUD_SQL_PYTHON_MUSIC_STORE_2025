@@ -144,6 +144,12 @@ def productos():
     conn = get_connection()
     cursor = conn.cursor()
 
+    cursor.execute("SELECT nombre FROM album  ")
+    album = cursor.fetchall()
+            
+    cursor.execute("SELECT nombre FROM artista")
+    artistas = cursor.fetchall()
+    
     if filtro == 'vinilo':
         cursor.execute("""
             SELECT 'vinilo' AS tipo, v.idVinyl AS id, a.nombre AS album, v.precio, v.stock
@@ -164,7 +170,7 @@ def productos():
         """)
     else:
         cursor.execute("""
-            SELECT 'vinilo' AS tipo, v.idVinyl AS id, a.nombre AS album, v.precio, v.stock
+            SELECT 'vinyl' AS tipo, v.idVinyl AS id, a.nombre AS album, v.precio, v.stock
             FROM vinyl v
             JOIN album a ON v.idAlbum = a.idAlbum
 
@@ -183,32 +189,95 @@ def productos():
 
     productos = cursor.fetchall()
     conn.close()
+    return render_template('product.html', productos=productos, filtro=filtro, artistas=artistas, album=album)
 
-    return render_template('product.html', productos=productos, filtro=filtro)
-
-@app.route('/addProduct' , methods = ['POST'])
+@app.route('/addProduct', methods=['POST'])
 @login_required
 def addProduct():
     if request.method == 'POST':
-        tipo = request.form['tipo']
-        nombreAlbum = request.form['nombre']
-        nombreArtista = request.form['artista']
-        precio = request.form['precio']
-        stock = request.form['stock']
-        
-        conn = get_connection() 
-        try:
-            cur = conn.cursor()
-        
-        
+        nombre = request.form['nombre']
+        tipo = request.form['tipo']  # 'cd', 'vinyl' o 'casete'
+        precio = float(request.form['precio'])
+        stock = int(request.form['stock'])
 
-            
-        finally:
-            conn.close()
-        
-        return redirect(url_for('products'))
+        conn = get_connection()
+        cur = conn.cursor()
 
+        # Obtener idAlbum
+        cur.execute("SELECT idAlbum FROM album WHERE nombre = %s", (nombre,))
+        album_row = cur.fetchone()
+        if not album_row:
+            flash('Álbum no encontrado')
+            return redirect(url_for('productos'))
+        idAlbum = album_row['idAlbum']
 
+        # Determinar tabla y campos según tipo
+        if tipo == 'vinyl':
+            tabla = 'vinyl'
+            id_campo = 'idAlbum'
+        elif tipo == 'cd':
+            tabla = 'cd'
+            id_campo = 'idAlbum'
+        elif tipo == 'casete':
+            tabla = 'casete'
+            id_campo = 'idAlbum'
+        else:
+            flash('Tipo de producto no válido')
+            return redirect(url_for('productos'))
+
+        # Verificar si ya existe ese album en ese formato
+        cur.execute(f"SELECT * FROM {tabla} WHERE {id_campo} = %s", (idAlbum,))
+        existe = cur.fetchone()
+
+        if existe:
+            # Si existe, actualiza el stock
+            cur.execute(f"UPDATE {tabla} SET stock = stock + %s WHERE {id_campo} = %s", (stock, idAlbum))
+            flash('Stock actualizado correctamente')
+        else:
+            # Si no existe, inserta el nuevo producto
+            cur.execute(f"INSERT INTO {tabla} (idAlbum, precio, stock) VALUES (%s, %s, %s)", (idAlbum, precio, stock))
+            flash('Producto agregado correctamente')
+
+        conn.commit()
+        conn.close()
+        return redirect(url_for('productos'))
+
+@app.route('/deleteProduct', methods=['POST'])
+@login_required
+def deleteProduct():
+    tipo = request.form['tipo']
+    nombre = request.form['nombre']
+    
+    
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # Obtener idAlbum
+    cur.execute("SELECT idAlbum FROM album WHERE nombre = %s", (nombre,))
+    
+    album_row = cur.fetchone()
+
+    
+    idAlbum = album_row['idAlbum']
+
+    # Determinar tabla según tipo
+    if tipo == 'vinyl':
+        tabla = 'vinyl'
+    elif tipo == 'cd':
+        tabla = 'cd'
+    elif tipo == 'casete':
+        tabla = 'casete'
+    else:
+        flash('Tipo de producto no válido')
+        return redirect(url_for('productos'))
+
+    # Eliminar el producto
+    cur.execute(f"DELETE FROM {tabla} WHERE idAlbum = %s", (idAlbum,))
+    conn.commit()
+    conn.close()
+    
+    print(tabla,idAlbum )
+    return redirect(url_for('productos'))
 
 def status_401(error):
     return redirect(url_for('login'))
@@ -220,4 +289,4 @@ if __name__ == '__main__':
     app.run(port = 5000, debug=True)
     app.register_error_handler(401, status_401)
     app.register_error_handler(404, status_404)
-    
+

@@ -57,14 +57,14 @@
       <section class="formulario-agregar">
         <h2><i class="fas fa-plus-circle"></i> Agregar Producto</h2>
         <form 
-            action="{{ url_for('addClient') }}"
+            action="{{ url_for('addProduct') }}"
             method="POST"
             autocomplete="off">
           <div>
             <label for="tipo">Tipo de Producto</label>
             <select id="tipo" name="tipo" required class="styled-select">
               <option value="">Seleccionar...</option>
-              <option value="vinilo">Vinilo</option>
+              <option value="vinyl">Vinilo</option>
               <option value="cd">CD</option>
               <option value="casete">Casete</option>
             </select>
@@ -72,12 +72,12 @@
           
           <div>
             <label for="nombre">Nombre del Álbum</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Ej: Thriller" required>
-          </div>
-          
-          <div>
-            <label for="artista">Artista</label>
-            <input type="text" id="artista" name="artista" placeholder="Ej: Michael Jackson" required>
+            <select id="nombre" name="nombre" required>
+              <option value="">Seleccionar...</option>
+              {% for album in album %}
+               <option value="{{ album.nombre }}"> {{album.nombre}} </option>
+               {% endfor %}
+            </select>
           </div>
           
           <div>
@@ -127,9 +127,13 @@
               <button class="btn-edit">
                 <i class="fas fa-edit"></i> Editar
               </button>
-              <button class="btn-delete">
-                <i class="fas fa-trash-alt"></i> Eliminar
-              </button>
+             <form action="{{ url_for('deleteProduct') }}" method="POST" style="display:inline;">
+            <input type="hidden" name="tipo" value="{{ item.tipo }}">
+            <input type="hidden" name="nombre" value="{{ item.album }}">
+            <button type="submit" class="btn-delete">
+              <i class="fas fa-trash-alt"></i> Borrar
+            </button>
+            </form>
             </div>
           </div>
         </div>
