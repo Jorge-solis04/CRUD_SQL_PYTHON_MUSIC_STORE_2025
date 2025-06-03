@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Melody Market - Artistas</title>
+  <link rel="stylesheet" href="./css/artistas.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+  <div class="music-background">
+    <div class="music-note note-1"><i class="fas fa-music"></i></div>
+    <div class="music-note note-2"><i class="fas fa-music"></i></div>
+    <div class="music-note note-3"><i class="fas fa-music"></i></div>
+  </div>
+
+  <header class="encabezado">
+    <div class="logo">
+      <i class="fas fa-guitar"></i>
+      <div>
+        <h1>Melody Market</h1>
+        <p class="slogan">Tu tienda de discos digitales</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="contenido">
+    <div class="contenedor-flex">
+      <!-- Formulario para agregar artista -->
+      <div class="formulario-agregar">
+        <h2>Agregar Artista</h2>
+        <form id="formArtista" autocomplete="off">
+          <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required />
+          </div>
+          <button type="submit" class="btn-edit">
+            <i class="fas fa-plus"></i> Agregar
+          </button>
+        </form>
+      </div>
+      
+      <!-- Tabla de artistas -->
+      <div class="tabla-artistas">
+        <table id="tablaArtistas">
+          <thead>
+            <tr>
+              <th>Nombre del Artista</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Los artistas se agregarán aquí dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="pie">
+    <div class="footer-content">
+      <p>© 2025 Melody Market. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="./js/artistas.js"></script>
+</body>
+</html>
