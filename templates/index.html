@@ -28,8 +28,10 @@
           <p class="slogan">
             Tu tienda de discos digitales e instrumentos de calidad
           </p>
+          <h3>Bienvenido {{current_user.fullname}}</h3>
         </div>
       </div>
+      <a href="{{url_for('logout')}}">Logout</a>
     </header>
 
     <section class="filtro">
@@ -41,18 +43,8 @@
           <option value="clientes">
             <i class="fas fa-users"></i> Clientes
           </option>
-          <option value="discos">
-            <i class="fas fa-compact-disc"></i> Discos
-          </option>
-          <option value="instrumentos">
-            <i class="fas fa-guitar"></i> Instrumentos
-          </option>
-          <option value="ventas"><i class="fas fa-receipt"></i> Ventas</option>
-          <option value="empleados">
-            <i class="fas fa-user-tie"></i> Empleados
-          </option>
-          <option value="proveedores">
-            <i class="fas fa-truck"></i> Proveedores
+          <option value="productos">
+            <i class="fas fa-compact-disc"></i> Productos
           </option>
         </select>
       </div>
@@ -135,40 +127,6 @@
         </div>
       </div>
     </main>
-
-    <script>
-      function editarCliente() {
-        // Simulación de edición con animación
-        const clienteInfo = document.querySelector(".info-cliente");
-        clienteInfo.style.transform = "scale(0.98)";
-        clienteInfo.style.boxShadow = "0 0 10px rgba(74, 144, 226, 0.5)";
-
-        setTimeout(() => {
-          clienteInfo.style.transform = "scale(1)";
-          clienteInfo.style.boxShadow = "none";
-          alert("Modo edición activado. (Simulación)");
-        }, 300);
-      }
-
-      function borrarCliente() {
-        if (confirm("¿Estás seguro de borrar este cliente?")) {
-          const clienteInfo = document.querySelector(".info-cliente");
-          clienteInfo.style.animation = "fadeOut 0.5s forwards";
-
-          setTimeout(() => {
-            alert("Cliente borrado. (Simulación)");
-            clienteInfo.style.display = "none";
-          }, 500);
-        }
-      }
-
-      // Agregar animación para el select
-      document
-        .getElementById("tablaFiltro")
-        .addEventListener("change", function () {
-          const mainContent = document.querySelector(".contenido");
-          mainContent.style.animation = "fadeIn 0.5s";
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
   </body>
 </html>
