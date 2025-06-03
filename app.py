@@ -1,4 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_login import LoginManager, login_user, logout_user, login_required
+
+
 import pymysql
 import config
 from db import get_connection
@@ -10,6 +13,7 @@ from src.models.ModelUser import ModelUser
 from src.models.entities.user import User
 
 app = Flask(__name__)
+login_manager_app = LoginManager(app)
 
 #Coneccion a la base de datos de MySQL
 def get_connection():
@@ -25,6 +29,11 @@ def get_connection():
 # settings
 app.secret_key = 'mySecretKey'
 
+@login_manager_app.user_loader
+def load_user(id):
+    conn = get_connection()
+    return ModelUser.get_by_id(conn, id)
+
 #rutas de la pagina hueb
 @app.route('/')
 def index():
@@ -39,6 +48,7 @@ def login():
         logged_user = ModelUser.login(conn, user)
         if logged_user != None:
             if logged_user.password:
+                login_user(logged_user)
                 return redirect(url_for('home'))
             else:
                 flash ("Invalid password")
@@ -47,10 +57,15 @@ def login():
             return render_template('sesion.html')
     else:
         return render_template('sesion.html')
+    
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
 
 @app.route('/home')
+@login_required
 def home():
-    
     conn = get_connection()
     cur = conn.cursor()
     cur.execute('SELECT * FROM cliente')
@@ -59,6 +74,7 @@ def home():
     return render_template('index.html', clientes = data)
 
 @app.route('/addClient' , methods = ['POST'])
+@login_required
 def addClient():
     if request.method == 'POST':
         nombre = request.form['nombre']
@@ -78,6 +94,7 @@ def addClient():
         return redirect(url_for('home'))
     
 @app.route('/delete/<string:idCliente>')
+@login_required
 def deleteClient(idCliente):
     conn = get_connection()
     cur = conn.cursor()
@@ -88,6 +105,7 @@ def deleteClient(idCliente):
     return redirect(url_for('home'))
     
 @app.route('/edit/<string:idCliente>')
+@login_required
 def getClient(idCliente):
     conn = get_connection()
     cur = conn.cursor()
@@ -97,6 +115,7 @@ def getClient(idCliente):
     return render_template('editClient.html', cliente = data[0])
 
 @app.route('/update/<string:idCliente>', methods = ['POST'])
+@login_required
 def updateClient(idCliente):
     if request.method == 'POST':
         nombre = request.form['nombre']
@@ -116,9 +135,89 @@ def updateClient(idCliente):
         conn.commit()
         return redirect(url_for('home'))
 
-@app.route('/product')
-def product():
-    return render_template('product.html')
+
+@app.route('/products')
+@login_required
+def productos():
+    filtro = request.args.get('filtro', 'todos')
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    if filtro == 'vinilo':
+        cursor.execute("""
+            SELECT 'vinilo' AS tipo, v.idVinyl AS id, a.nombre AS album, v.precio, v.stock
+            FROM vinyl v
+            JOIN album a ON v.idAlbum = a.idAlbum
+        """)
+    elif filtro == 'cd':
+        cursor.execute("""
+            SELECT 'cd' AS tipo, c.idCD AS id, a.nombre AS album, c.precio, c.stock
+            FROM cd c
+            JOIN album a ON c.idAlbum = a.idAlbum
+        """)
+    elif filtro == 'casete':
+        cursor.execute("""
+            SELECT 'casete' AS tipo, cs.idCasete AS id, a.nombre AS album, cs.precio, cs.stock
+            FROM casete cs
+            JOIN album a ON cs.idAlbum = a.idAlbum
+        """)
+    else:
+        cursor.execute("""
+            SELECT 'vinilo' AS tipo, v.idVinyl AS id, a.nombre AS album, v.precio, v.stock
+            FROM vinyl v
+            JOIN album a ON v.idAlbum = a.idAlbum
+
+            UNION ALL
+
+            SELECT 'cd' AS tipo, c.idCD AS id, a.nombre AS album, c.precio, c.stock
+            FROM cd c
+            JOIN album a ON c.idAlbum = a.idAlbum
+
+            UNION ALL
+
+            SELECT 'casete' AS tipo, cs.idCasete AS id, a.nombre AS album, cs.precio, cs.stock
+            FROM casete cs
+            JOIN album a ON cs.idAlbum = a.idAlbum
+        """)
+
+    productos = cursor.fetchall()
+    conn.close()
+
+    return render_template('product.html', productos=productos, filtro=filtro)
+
+@app.route('/addProduct' , methods = ['POST'])
+@login_required
+def addProduct():
+    if request.method == 'POST':
+        tipo = request.form['tipo']
+        nombreAlbum = request.form['nombre']
+        nombreArtista = request.form['artista']
+        precio = request.form['precio']
+        stock = request.form['stock']
+        
+        conn = get_connection() 
+        try:
+            cur = conn.cursor()
+        
+        
+
+            
+        finally:
+            conn.close()
+        
+        return redirect(url_for('products'))
+
+
+
+def status_401(error):
+    return redirect(url_for('login'))
+
+def status_404(error):
+    return "<h1>Pagina no encontrada, buscala en tupu</h1>"
 
 if __name__ == '__main__':
     app.run(port = 5000, debug=True)
+    app.register_error_handler(401, status_401)
+    app.register_error_handler(404, status_404)
+    
