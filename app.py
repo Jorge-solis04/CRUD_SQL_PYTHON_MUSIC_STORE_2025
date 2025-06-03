@@ -137,6 +137,7 @@ def updateClient(idCliente):
 
 
 @app.route('/products')
+@login_required
 def productos():
     filtro = request.args.get('filtro', 'todos')
 
@@ -184,6 +185,28 @@ def productos():
     conn.close()
 
     return render_template('product.html', productos=productos, filtro=filtro)
+
+@app.route('/addProduct' , methods = ['POST'])
+@login_required
+def addProduct():
+    if request.method == 'POST':
+        tipo = request.form['tipo']
+        nombreAlbum = request.form['nombre']
+        nombreArtista = request.form['artista']
+        precio = request.form['precio']
+        stock = request.form['stock']
+        
+        conn = get_connection() 
+        try:
+            cur = conn.cursor()
+        
+        
+
+            
+        finally:
+            conn.close()
+        
+        return redirect(url_for('products'))
 
 
 

@@ -56,7 +56,10 @@
       <!-- Formulario para agregar productos -->
       <section class="formulario-agregar">
         <h2><i class="fas fa-plus-circle"></i> Agregar Producto</h2>
-        <form id="formProducto">
+        <form 
+            action="{{ url_for('addClient') }}"
+            method="POST"
+            autocomplete="off">
           <div>
             <label for="tipo">Tipo de Producto</label>
             <select id="tipo" name="tipo" required class="styled-select">
