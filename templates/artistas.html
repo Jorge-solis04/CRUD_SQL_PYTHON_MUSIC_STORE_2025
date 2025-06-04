@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Melody Market - Artistas</title>
-  <link rel="stylesheet" href="./css/artistas.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/artistas.css') }}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
@@ -50,19 +50,18 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Los artistas se agregarán aquí dinámicamente -->
+            <tr>
+              <td>hOLA</td>
+              <td>ADIOS</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   </main>
 
-  <footer class="pie">
-    <div class="footer-content">
-      <p>© 2025 Melody Market. Todos los derechos reservados.</p>
-    </div>
-  </footer>
+ 
 
-  <script src="./js/artistas.js"></script>
+  
 </body>
 </html>

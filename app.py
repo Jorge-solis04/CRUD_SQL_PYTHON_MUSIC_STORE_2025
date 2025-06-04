@@ -279,6 +279,56 @@ def deleteProduct():
     print(tabla,idAlbum )
     return redirect(url_for('productos'))
 
+@app.route('/updateProduct', methods=['POST'])
+@login_required
+def updateProduct():
+    tipo = request.form['tipo']
+    nombre = request.form['nombre']
+    precio = float(request.form['precio'])
+    stock = int(request.form['stock'])
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # Obtener idAlbum
+    cur.execute("SELECT idAlbum FROM album WHERE nombre = %s", (nombre,))
+    album_row = cur.fetchone()
+    idAlbum = album_row['idAlbum']
+
+    # Determinar tabla según tipo
+    if tipo == 'vinyl':
+        tabla = 'vinyl'
+    elif tipo == 'cd':
+        tabla = 'cd'
+    elif tipo == 'casete':
+        tabla = 'casete'
+    else:
+        flash('Tipo de producto no válido')
+        return redirect(url_for('productos'))
+
+    # Actualizar el producto
+    cur.execute(f"UPDATE {tabla} SET precio = %s, stock = %s WHERE idAlbum = %s", (precio, stock, idAlbum))
+    conn.commit()
+    conn.close()
+    flash('Producto actualizado correctamente')
+    return redirect(url_for('productos'))
+
+@app.route('/editProduct')
+@login_required
+def editProduct():
+    tipo = request.args.get('tipo')
+    nombre = request.args.get('nombre')
+    precio = request.args.get('precio')
+    stock = request.args.get('stock')
+    item = {
+        'tipo': tipo,
+        'nombre': nombre,
+        'precio': precio,
+        'stock': stock
+    }
+    return render_template('editProduct.html', item=item)
+
+
 def status_401(error):
     return redirect(url_for('login'))
 
