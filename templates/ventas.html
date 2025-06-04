@@ -18,6 +18,7 @@
   </div>
 
   <header class="encabezado">
+    <a href="{{ url_for('home') }}" class="logo" style="text-decoration: none; color: inherit;">
     <div class="logo">
       <i class="fas fa-guitar"></i>
       <div>
@@ -25,6 +26,7 @@
         <p class="slogan">Registro de ventas</p>
       </div>
     </div>
+    </a>
   </header>
 
   <main class="contenido">
@@ -32,31 +34,54 @@
       <!-- Formulario para agregar venta -->
       <div class="formulario-agregar">
         <h2>Registrar Venta</h2>
-        <form id="formVenta" autocomplete="off">
-          <div>
-            <label for="fecha">Fecha:</label>
-            <input type="date" id="fecha" name="fecha" required />
-          </div>
+        <!-- Solo selecciona formato, álbum y cantidad -->
+        <form action="{{ url_for('add_venta') }}" method="POST" autocomplete="off">
           <div>
             <label for="cliente">Cliente:</label>
-            <input type="text" id="cliente" name="cliente" required />
+            <select name="idCliente" required>
+              <option value="">Seleccione...</option>
+              {% for cliente in clientes %}
+                <option value="{{ cliente.idCliente }}">{{ cliente.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label for="fecha">Fecha:</label>
+            <input type="date" name="fecha" required value="{{ fecha_actual }}">
           </div>
           <div>
             <label for="formato">Formato:</label>
-            <select id="formato" name="formato" required>
+            <select name="formato" id="formato" required onchange="mostrarProductos()">
               <option value="">Seleccione...</option>
-              <option value="CD">CD</option>
-              <option value="Vinilo">Vinilo</option>
-              <option value="Cassete">Cassete</option>
+              <option value="cd">CD</option>
+              <option value="vinyl">Vinilo</option>
+              <option value="casete">Casete</option>
+            </select>
+          </div>
+          <div>
+            <label for="idFormato">Álbum:</label>
+            <select name="idFormato" id="select-cd" style="display:none;">
+              <option value="">Seleccione CD...</option>
+              {% for cd in cds %}
+                <option value="{{ cd.idFormato }}">{{ cd.album }}</option>
+              {% endfor %}
+            </select>
+            <select name="idFormato" id="select-vinyl" style="display:none;">
+              <option value="">Seleccione Vinilo...</option>
+              {% for vinyl in vinilos %}
+                <option value="{{ vinyl.idFormato }}">{{ vinyl.album }}</option>
+              {% endfor %}
+            </select>
+            <select name="idFormato" id="select-casete" style="display:none;">
+              <option value="">Seleccione Casete...</option>
+              {% for casete in casetes %}
+                <option value="{{ casete.idFormato }}">{{ casete.album }}</option>
+              {% endfor %}
             </select>
           </div>
           <div>
             <label for="cantidad">Cantidad:</label>
-            <input type="number" id="cantidad" name="cantidad" min="1" required />
-          </div>
-          <div>
-            <label for="precio">Precio Total:</label>
-            <input type="number" id="precio" name="precio" min="0" step="0.01" required />
+            <input type="number" name="cantidad" min="1" required>
           </div>
           <button type="submit" class="btn-edit">
             <i class="fas fa-plus"></i> Registrar
@@ -66,17 +91,35 @@
       
       <!-- Lista de ventas -->
       <div class="lista-ventas" id="listaVentas">
-        <!-- Las ventas se agregarán aquí dinámicamente -->
+        <h1 class="h1-venta">Lista de Ventas</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID Venta</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Formato</th>
+                <th>ID Formato</th>
+                <th>Álbum</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venta in ventas %}
+            <tr>
+                {% for key, value in venta.items() %}
+                <td>
+                    {{ value }}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
       </div>
     </div>
   </main>
 
-  <footer class="pie">
-    <div class="footer-content">
-      <p>© 2025 Melody Market. Todos los derechos reservados.</p>
-    </div>
-  </footer>
-
-  <script src="./js/ventas.js"></script>
+  <script src="{{ url_for('static', filename='js/ventas.js') }}"></script>
 </body>
 </html>

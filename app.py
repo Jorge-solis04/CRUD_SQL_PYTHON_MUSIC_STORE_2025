@@ -11,6 +11,7 @@ from src.models.ModelUser import ModelUser
 
 #Entities
 from src.models.entities.user import User
+from datetime import datetime
 
 app = Flask(__name__)
 login_manager_app = LoginManager(app)
@@ -352,7 +353,6 @@ def addartista():
         cursor.execute("SELECT * FROM artista WHERE nombre = %s", (nombre,))
         existente = cursor.fetchone()
         if existente:
-            flash('El artista ya existe', 'error')
             return redirect(url_for("Artistas"))
 
         cursor.execute("INSERT INTO artista (nombre) VALUES (%s)", (nombre,))
@@ -462,6 +462,136 @@ def updateAlbum(idAlbum):
     conn.commit()
     return redirect(url_for("albumes"))
 
+@app.route('/ventas')
+@login_required
+def ventas():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT 
+        v.idVenta,
+        c.nombre AS cliente,
+        v.fecha,
+        dv.formato,
+        dv.idFormato,
+        a.nombre AS nombre_album,
+        dv.precio_unitario
+    FROM venta v
+    JOIN cliente c ON v.idCliente = c.idCliente
+    JOIN detalle_venta dv ON v.idVenta = dv.idVenta
+    LEFT JOIN cd ON dv.formato = 'cd' AND dv.idFormato = cd.idCD
+    LEFT JOIN vinyl ON dv.formato = 'vinyl' AND dv.idFormato = vinyl.idVinyl
+    LEFT JOIN casete ON dv.formato = 'casete' AND dv.idFormato = casete.idCasete
+    LEFT JOIN album a ON 
+        (cd.idAlbum = a.idAlbum OR vinyl.idAlbum = a.idAlbum OR casete.idAlbum = a.idAlbum)
+    ORDER BY v.idVenta DESC
+    """)
+    ventas = cursor.fetchall()
+    cursor.execute("SELECT idCliente, nombre FROM cliente")
+    clientes = cursor.fetchall()
+
+    # Productos por formato
+    cursor.execute("""
+        SELECT cd.idCD AS idFormato, a.nombre AS album
+        FROM cd
+        JOIN album a ON cd.idAlbum = a.idAlbum
+    """)
+    cds = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT v.idVinyl AS idFormato, a.nombre AS album
+        FROM vinyl v
+        JOIN album a ON v.idAlbum = a.idAlbum
+    """)
+    vinilos = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT cs.idCasete AS idFormato, a.nombre AS album
+        FROM casete cs
+        JOIN album a ON cs.idAlbum = a.idAlbum
+    """)
+    casetes = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    fecha_actual = datetime.now().strftime('%Y-%m-%d')
+    return render_template(
+        "ventas.html",
+        ventas=ventas,
+        clientes=clientes,
+        fecha_actual=fecha_actual,
+        cds=cds,
+        vinilos=vinilos,
+        casetes=casetes
+    )
+
+@app.route('/add_venta', methods=['POST'])
+@login_required
+def add_venta():
+    idCliente = request.form['idCliente']
+    fecha = request.form['fecha']
+    formato = request.form['formato']
+    idFormato = request.form['idFormato']
+    cantidad = int(request.form['cantidad'])
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # 1. Obtener el precio y stock actual del producto
+    if formato == 'cd':
+        cursor.execute("SELECT precio, stock FROM cd WHERE idCD = %s", (idFormato,))
+    elif formato == 'vinyl':
+        cursor.execute("SELECT precio, stock FROM vinyl WHERE idVinyl = %s", (idFormato,))
+    elif formato == 'casete':
+        cursor.execute("SELECT precio, stock FROM casete WHERE idCasete = %s", (idFormato,))
+    else:
+        flash('Formato no válido')
+        return redirect(url_for('ventas'))
+
+    producto = cursor.fetchone()
+    if not producto:
+        flash('Producto no encontrado')
+        return redirect(url_for('ventas'))
+
+    precio_unitario = float(producto['precio'])
+    stock_actual = int(producto['stock'])
+
+    # 2. Validar stock suficiente
+    if cantidad > stock_actual:
+        flash('No hay suficiente stock para esta venta')
+        cursor.close()
+        conn.close()
+        return redirect(url_for('ventas'))
+
+    total = cantidad * precio_unitario
+
+    # 3. Insertar en venta
+    cursor.execute(
+        "INSERT INTO venta (idCliente, fecha, total) VALUES (%s, %s, %s)",
+        (idCliente, fecha, total)
+    )
+    conn.commit()
+    idVenta = cursor.lastrowid
+
+    # 4. Insertar en detalle_venta
+    cursor.execute(
+        "INSERT INTO detalle_venta (idVenta, formato, idFormato, cantidad, precio_unitario) VALUES (%s, %s, %s, %s, %s)",
+        (idVenta, formato, idFormato, cantidad, precio_unitario)
+    )
+
+    # 5. Restar stock
+    if formato == 'cd':
+        cursor.execute("UPDATE cd SET stock = stock - %s WHERE idCD = %s", (cantidad, idFormato))
+    elif formato == 'vinyl':
+        cursor.execute("UPDATE vinyl SET stock = stock - %s WHERE idVinyl = %s", (cantidad, idFormato))
+    elif formato == 'casete':
+        cursor.execute("UPDATE casete SET stock = stock - %s WHERE idCasete = %s", (cantidad, idFormato))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+    flash('Venta registrada correctamente')
+    return redirect(url_for('ventas'))
 
 def status_401(error):
     return redirect(url_for('login'))
