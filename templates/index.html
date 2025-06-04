@@ -31,23 +31,18 @@
           <h3>Bienvenido {{current_user.fullname}}</h3>
         </div>
       </div>
-      <a href="{{url_for('logout')}}">Logout</a>
+      <div class="btn-logout-div">
+        <a href="{{ url_for('logout') }}" class="btn-logout" >
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
     </header>
 
     <section class="filtro">
-      <div class="filter-container">
-        <label for="tablaFiltro"
-          ><i class="fas fa-filter"></i> Filtrar por categoría:</label
-        >
-        <select id="tablaFiltro" class="styled-select">
-          <option value="clientes">
-            <i class="fas fa-users"></i> Clientes
-          </option>
-          <option value="productos">
-            <i class="fas fa-compact-disc"></i> Productos
-          </option>
-        </select>
-      </div>
+      <a href="/Artistas" class="filtro-link"><i class="fas fa-user"></i> Artistas</a>
+      <a href="/albumes" class="filtro-link"><i class="fas fa-compact-disc"></i> Albumes</a>
+      <a href="/products" class="filtro-link"><i class="fas fa-guitar"></i> Productos</a>
+      <a href="/ventas" class="filtro-link"><i class="fas fa-shopping-cart"></i> Ventas</a>
     </section>
 
     <main class="contenido">
