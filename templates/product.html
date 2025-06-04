@@ -124,9 +124,10 @@
             </div>
             
             <div class="botones">
-              <button class="btn-edit">
+              <a class="btn-edit"
+                 href="{{ url_for('editProduct', tipo=item.tipo, nombre=item.album, precio=item.precio, stock=item.stock) }}">
                 <i class="fas fa-edit"></i> Editar
-              </button>
+             </a>
              <form action="{{ url_for('deleteProduct') }}" method="POST" style="display:inline;">
             <input type="hidden" name="tipo" value="{{ item.tipo }}">
             <input type="hidden" name="nombre" value="{{ item.album }}">

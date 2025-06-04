@@ -279,6 +279,107 @@ def deleteProduct():
     print(tabla,idAlbum )
     return redirect(url_for('productos'))
 
+@app.route('/updateProduct', methods=['POST'])
+@login_required
+def updateProduct():
+    tipo = request.form['tipo']
+    nombre = request.form['nombre']
+    precio = float(request.form['precio'])
+    stock = int(request.form['stock'])
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # Obtener idAlbum
+    cur.execute("SELECT idAlbum FROM album WHERE nombre = %s", (nombre,))
+    album_row = cur.fetchone()
+    idAlbum = album_row['idAlbum']
+
+    # Determinar tabla según tipo
+    if tipo == 'vinyl':
+        tabla = 'vinyl'
+    elif tipo == 'cd':
+        tabla = 'cd'
+    elif tipo == 'casete':
+        tabla = 'casete'
+    else:
+        flash('Tipo de producto no válido')
+        return redirect(url_for('productos'))
+
+    # Actualizar el producto
+    cur.execute(f"UPDATE {tabla} SET precio = %s, stock = %s WHERE idAlbum = %s", (precio, stock, idAlbum))
+    conn.commit()
+    conn.close()
+    flash('Producto actualizado correctamente')
+    return redirect(url_for('productos'))
+
+@app.route('/editProduct')
+@login_required
+def editProduct():
+    tipo = request.args.get('tipo')
+    nombre = request.args.get('nombre')
+    precio = request.args.get('precio')
+    stock = request.args.get('stock')
+    item = {
+        'tipo': tipo,
+        'nombre': nombre,
+        'precio': precio,
+        'stock': stock
+    }
+    return render_template('editProduct.html', item=item)
+
+
+@app.route('/Artistas')
+@login_required
+def Artistas():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM artista")
+    data_artista = cursor.fetchall()
+    print(data_artista)
+
+    return render_template("artistas.html", data_artista = data_artista)
+
+@app.route('/addartista', methods = ['POST'])
+@login_required
+def addartista():
+
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO artista (nombre) VALUES (%s)", nombre)
+        conn.commit()
+
+        return redirect(url_for("Artistas"))
+    
+    #Validacion si ya existe el artista que no te deje y redirija a la pagina Artista
+    
+@app.route('/getArtista/<string:idArtista>')
+@login_required
+def getArtista(idArtista):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM artista WHERE idArtista = %s", (idArtista,))
+    data = cursor.fetchall() 
+
+    return render_template("editArtista.html", data_artista = data[0])
+
+@app.route('/updateArtista/<string:idArtista>', methods = ['POST'])
+@login_required
+def updateArtista(idArtista):
+     
+     if request.method == 'POST':
+        nombre = request.form['nombre']
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE artista SET nombre = %s WHERE idArtista = %s", (nombre, idArtista,))
+        conn.commit()
+
+        return redirect(url_for('Artistas'))
+
+#De album que se muestren, agreguen, editen, y que no se pueda agregar un mismo album que ya existe.
+
 def status_401(error):
     return redirect(url_for('login'))
 
@@ -289,4 +390,3 @@ if __name__ == '__main__':
     app.run(port = 5000, debug=True)
     app.register_error_handler(401, status_401)
     app.register_error_handler(404, status_404)
-

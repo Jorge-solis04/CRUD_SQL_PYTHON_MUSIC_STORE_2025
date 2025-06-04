@@ -1,0 +1,10 @@
+<form action="/updateArtista/{{data_artista.idArtista}}" method="POST" autocomplete="off">
+    <div>
+        <label for="nombre">Nombre: </label>
+        <input type="text" id="nombre" name="nombre" value="{{ data_artista.nombre }}" required>
+    </div>
+
+    <button type="submit" class="btn-edit">
+        <i class="fas fa-plus"></i> Editar
+    </button>
+</form>
