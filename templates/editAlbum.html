@@ -1,50 +1,31 @@
-<form action="" method="POST" autocomplete="off">
+<form action="{{ url_for('updateAlbum', idAlbum=album.idAlbum) }}" method="POST" autocomplete="off">
     <div>
-        <label for="nombre">Nombre: </label>
-        <input 
-        type="text"
-        id="nombre"
-        name="nombre"
-        value="{{ album.nombre }}"
-        required>
+        <label for="nombre">Título: </label>
+        <input type="text" id="nombre" name="nombre" value="{{ album.nombre }}" required>
     </div>
     <div>
-        <label for="artista">Artista: </label>
-        <input 
-        type="text"
-        id="artista"
-        name="artista"
-        value="{{ album.artista }}"
-        required>
+        <label for="idArtista">Artista: </label>
+        <select id="idArtista" name="idArtista" required>
+            {% for artista in data_artista %}
+            <option value="{{ artista.idArtista }}" {% if artista.idArtista==album.idArtista %}selected{% endif %}>
+                {{ artista.nombre }}
+            </option>
+            {% endfor %}
+        </select>
     </div>
     <div>
-        <label for="año">Año: </label>
-        <input 
-        type="text"
-        id="año"
-        name="año"
-        value="{{ album.anio }}"
-        required>
+        <label for="anio">Año: </label>
+        <input type="number" id="anio" name="anio" value="{{ album.anio }}" required>
     </div>
     <div>
-        <label for="genero">Genero: </label>
-        <input 
-        type="text"
-        id="genero"
-        name="genero"
-        value="{{ album.genero }}"
-        required>
+        <label for="genero">Género: </label>
+        <input type="text" id="genero" name="genero" value="{{ album.genero }}" required>
     </div>
     <div>
         <label for="disquera">Disquera: </label>
-        <input 
-        type="text"
-        id="disquera"
-        name="disquera"
-        value="{{ album.disquera }}"
-        required>
+        <input type="text" id="disquera" name="disquera" value="{{ album.disquera }}" required>
     </div>
     <button type="submit" class="btn-edit">
-    <i class="fas fa-plus"></i> Editar
-  </button>
+        <i class="fas fa-plus"></i> Editar
+    </button>
 </form>
