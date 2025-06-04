@@ -343,17 +343,21 @@ def Artistas():
 @app.route('/addartista', methods = ['POST'])
 @login_required
 def addartista():
-
     if request.method == 'POST':
         nombre = request.form['nombre']
         conn = get_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO artista (nombre) VALUES (%s)", nombre)
-        conn.commit()
 
+        # Validación si ya existe
+        cursor.execute("SELECT * FROM artista WHERE nombre = %s", (nombre,))
+        existente = cursor.fetchone()
+        if existente:
+            flash('El artista ya existe', 'error')
+            return redirect(url_for("Artistas"))
+
+        cursor.execute("INSERT INTO artista (nombre) VALUES (%s)", (nombre,))
+        conn.commit()
         return redirect(url_for("Artistas"))
-    
-    #Validacion si ya existe el artista que no te deje y redirija a la pagina Artista
     
 @app.route('/getArtista/<string:idArtista>')
 @login_required
@@ -379,6 +383,85 @@ def updateArtista(idArtista):
         return redirect(url_for('Artistas'))
 
 #De album que se muestren, agreguen, editen, y que no se pueda agregar un mismo album que ya existe.
+@app.route('/albumes')
+@login_required
+def albumes():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT album.idAlbum, album.nombre, album.anio, album.genero, album.disquera, artista.nombre AS artista
+        FROM album
+        LEFT JOIN artista ON album.idArtista = artista.idArtista
+    """)
+    data_album = cursor.fetchall()
+
+    cursor.execute("SELECT * FROM artista")
+    data_artista = cursor.fetchall()
+
+    return render_template("albumes.html", data_album=data_album, data_artista=data_artista)
+
+@app.route('/addalbum', methods=['POST'])
+@login_required
+def addalbum():
+    nombre = request.form['nombre']
+    anio = request.form['anio']
+    genero = request.form['genero']
+    disquera = request.form['disquera']
+    idArtista = request.form['idArtista']
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM album WHERE nombre = %s", (nombre,))
+    existente = cursor.fetchone()
+    if existente:
+        flash("El álbum ya existe", "error")
+        return redirect(url_for("albumes"))
+
+    cursor.execute(
+        "INSERT INTO album (nombre, anio, genero, disquera, idArtista) VALUES (%s, %s, %s, %s, %s)",
+        (nombre, anio, genero, disquera, idArtista)
+    )
+    conn.commit()
+    return redirect(url_for("albumes"))
+
+@app.route('/getAlbum/<string:idAlbum>')
+@login_required
+def getAlbum(idAlbum):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM album WHERE idAlbum = %s", (idAlbum,))
+    data_album = cursor.fetchone()
+
+    cursor.execute("SELECT * FROM artista")
+    data_artista = cursor.fetchall()
+
+    return render_template("editAlbum.html", album=data_album, data_artista=data_artista)
+
+@app.route('/updateAlbum/<string:idAlbum>', methods=['POST'])
+@login_required
+def updateAlbum(idAlbum):
+    nombre = request.form['nombre']
+    anio = request.form['anio']
+    genero = request.form['genero']
+    disquera = request.form['disquera']
+    idArtista = request.form['idArtista']
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Validar que no exista otro álbum con el mismo nombre
+    cursor.execute("SELECT * FROM album WHERE nombre = %s AND idAlbum != %s", (nombre, idAlbum))
+    existente = cursor.fetchone()
+    if existente:
+        flash("Ya existe otro álbum con ese nombre", "error")
+        return redirect(url_for("albumes"))
+
+    cursor.execute("""
+        UPDATE album SET nombre = %s, anio = %s, genero = %s, disquera = %s, idArtista = %s WHERE idAlbum = %s """, (nombre, anio, genero, disquera, idArtista, idAlbum))
+    conn.commit()
+    return redirect(url_for("albumes"))
+
 
 def status_401(error):
     return redirect(url_for('login'))

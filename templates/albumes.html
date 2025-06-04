@@ -1,15 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Melody Market - Álbumes</title>
-  <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/albumes.css') }}"
-    />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/albumes.css') }}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      background-color: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+
+    thead {
+      background-color: #6c63ff;
+      color: white;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f3f3f3;
+    }
+
+    tbody tr:hover {
+      background-color: #ecebff;
+    }
+
+    .btn-edit {
+      background-color: #6c63ff;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-edit:hover {
+      background-color: #574fcf;
+    }
+
+    .lista-albumes {
+      margin-top: 2rem;
+      overflow-x: auto;
+    }
+
+    form input,
+    form select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    form .btn-edit {
+      margin-top: 10px;
+      width: 100%;
+    }
+  </style>
 </head>
+
 <body>
   <div class="music-background">
     <div class="music-note note-1"><i class="fas fa-music"></i></div>
@@ -32,18 +94,22 @@
       <!-- Formulario para agregar álbum -->
       <div class="formulario-agregar">
         <h2>Agregar Álbum</h2>
-        <form id="formAlbum" autocomplete="off">
+        <form id="formAlbum" action="{{ url_for('addalbum') }}" method="POST" autocomplete="off">
           <div>
-            <label for="titulo">Título:</label>
-            <input type="text" id="titulo" name="titulo" required />
+            <label for="nombre">Título:</label>
+            <input type="text" id="nombre" name="nombre" required />
           </div>
           <div>
-            <label for="artista">Artista:</label>
-            <input type="text" id="artista" name="artista" required />
+            <label for="idArtista">Artista:</label>
+            <select id="idArtista" name="idArtista" required>
+              {% for artista in data_artista %}
+              <option value="{{ artista.idArtista }}">{{ artista.nombre }}</option>
+              {% endfor %}
+            </select>
           </div>
           <div>
             <label for="anio">Año:</label>
-            <input type="number" id="anio" name="anio" min="1900" max="2023" required />
+            <input type="number" id="anio" name="anio" min="1900" max="2025" required />
           </div>
           <div>
             <label for="genero">Género:</label>
@@ -58,10 +124,37 @@
           </button>
         </form>
       </div>
-      
+
       <!-- Lista de álbumes -->
-      <div class="lista-albumes" id="listaAlbumes">
-        <!-- Los álbumes se agregarán aquí dinámicamente -->
+      <div class="lista-albumes">
+        <table>
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Artista</th>
+              <th>Año</th>
+              <th>Género</th>
+              <th>Disquera</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for album in data_album %}
+            <tr>
+              <td>{{ album.nombre }}</td>
+              <td>{{ album.artista }}</td>
+              <td>{{ album.anio }}</td>
+              <td>{{ album.genero }}</td>
+              <td>{{ album.disquera }}</td>
+              <td>
+                <a href="/getAlbum/{{ album.idAlbum }}" class="btn-edit">
+                  <i class="fas fa-edit"></i> Editar
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </main>
@@ -71,7 +164,6 @@
       <p>© 2025 Melody Market. Todos los derechos reservados.</p>
     </div>
   </footer>
-
-  <script src="./js/albumes.js"></script>
 </body>
+
 </html>
