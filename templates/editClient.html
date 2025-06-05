@@ -1,45 +1,37 @@
-<form action="/update/{{ cliente.idCliente }}" method="POST" autocomplete="off">
-  <div>
-    <label for="nombre">Nombre:</label>
-    <input
-      type="text"
-      id="nombre"
-      name="nombre"
-      value="{{ cliente.nombre }}"
-      required
-    />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edits.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <title>Melody Market - Editar Cliente</title>
+</head>
+<body>
+  <div class="form-container">
+    <h2 class="form-title">Editar Cliente</h2>
+    <form id="form" action="/update/{{ cliente.idCliente }}" method="POST" autocomplete="off">
+      <div>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" value="{{ cliente.nombre }}" required />
+      </div>
+      <div>
+        <label for="correo">Correo:</label>
+        <input type="email" id="correo" name="correo" value="{{ cliente.correo }}" required />
+      </div>
+      <div>
+        <label for="telefono">Teléfono:</label>
+        <input type="text" id="telefono" name="telefono" value="{{ cliente.telefono }}" required />
+      </div>
+      <div>
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" name="direccion" value="{{ cliente.direccion }}" required />
+      </div>
+      <button type="submit" class="btn-edit">
+        <i class="fas fa-plus"></i> Editar
+      </button>
+    </form>
   </div>
-  <div>
-    <label for="correo">Correo:</label>
-    <input
-      type="email"
-      id="correo"
-      name="correo"
-      value="{{ cliente.correo }}"
-      required
-    />
-  </div>
-  <div>
-    <label for="telefono">Teléfono:</label>
-    <input
-      type="text"
-      id="telefono"
-      name="telefono"
-      value="{{ cliente.telefono }}"
-      required
-    />
-  </div>
-  <div>
-    <label for="direccion">Dirección:</label>
-    <input
-      type="text"
-      id="direccion"
-      name="direccion"
-      value="{{ cliente.direccion }}"
-      required
-    />
-  </div>
-  <button type="submit" class="btn-edit">
-    <i class="fas fa-plus"></i> Editar
-  </button>
-</form>
+</body>
+</html>
+

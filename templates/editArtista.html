@@ -1,10 +1,27 @@
-<form action="/updateArtista/{{data_artista.idArtista}}" method="POST" autocomplete="off">
-    <div>
-        <label for="nombre">Nombre: </label>
-        <input type="text" id="nombre" name="nombre" value="{{ data_artista.nombre }}" required>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edits.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <title>Melody Market - Editar Artista</title>
+</head>
+<body>
+    <div class="form-container">
+        <h2 class="form-title">Editar Artista</h2>
+        <form id="form" action="/updateArtista/{{data_artista.idArtista}}" method="POST" autocomplete="off">
+            <div>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" value="{{ data_artista.nombre }}" required>
+            </div>
 
-    <button type="submit" class="btn-edit">
-        <i class="fas fa-plus"></i> Editar
-    </button>
-</form>
+            <button type="submit" class="btn-edit">
+                <i class="fas fa-plus"></i> Editar
+            </button>
+        </form>
+    </div>
+</body>
+</html>
+
+

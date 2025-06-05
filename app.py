@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, login_required
-
+from werkzeug.security import generate_password_hash
 
 import pymysql
 import config
@@ -63,6 +63,33 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("login"))
+
+@app.route("/register")
+def register():
+    
+    return render_template("registro.html")
+
+@app.route("/registerUser", methods = ['POST'])
+def registerUser():
+    if request.method == 'POST':
+        fullname = request.form['fullname']
+        username = request.form['username']
+        password = request.form['password']
+    
+    
+    
+    hashed_password = generate_password_hash(password)
+
+    print(fullname, username, password)
+    print(hashed_password)
+    
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("INSERT INTO usuarios (username, password, fullname) VALUES (%s, %s, %s)", (username, hashed_password, fullname))
+    conn.commit()
+    
+    return redirect(url_for("login"))
+
 
 @app.route('/home')
 @login_required

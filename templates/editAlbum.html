@@ -1,31 +1,50 @@
-<form action="{{ url_for('updateAlbum', idAlbum=album.idAlbum) }}" method="POST" autocomplete="off">
-    <div>
-        <label for="nombre">Título: </label>
-        <input type="text" id="nombre" name="nombre" value="{{ album.nombre }}" required>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edits.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <title>Melody Market - Editar Album</title>
+</head>
+<body>
+    <div class="form-container">
+        <h2 class="form-title">Editar Álbum</h2>
+        <form id="form" action="{{ url_for('updateAlbum', idAlbum=album.idAlbum) }}" method="POST" autocomplete="off">
+            <div>
+                <label for="nombre">Título: </label>
+                <input type="text" id="nombre" name="nombre" value="{{ album.nombre }}" required>
+            </div>
+            <div>
+                <label for="idArtista">Artista: </label>
+                <select id="idArtista" name="idArtista" required>
+                    {% for artista in data_artista %}
+                    <option value="{{ artista.idArtista }}" {% if artista.idArtista==album.idArtista %}selected{% endif %}>
+                        {{ artista.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="anio">Año: </label>
+                <input type="number" id="anio" name="anio" value="{{ album.anio }}" required>
+            </div>
+            <div>
+                <label for="genero">Género: </label>
+                <input type="text" id="genero" name="genero" value="{{ album.genero }}" required>
+            </div>
+            <div>
+                <label for="disquera">Disquera: </label>
+                <input type="text" id="disquera" name="disquera" value="{{ album.disquera }}" required>
+            </div>
+            <button type="submit" class="btn-edit">
+                <i class="fas fa-plus"></i> Editar
+            </button>
+        </form>
     </div>
-    <div>
-        <label for="idArtista">Artista: </label>
-        <select id="idArtista" name="idArtista" required>
-            {% for artista in data_artista %}
-            <option value="{{ artista.idArtista }}" {% if artista.idArtista==album.idArtista %}selected{% endif %}>
-                {{ artista.nombre }}
-            </option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <label for="anio">Año: </label>
-        <input type="number" id="anio" name="anio" value="{{ album.anio }}" required>
-    </div>
-    <div>
-        <label for="genero">Género: </label>
-        <input type="text" id="genero" name="genero" value="{{ album.genero }}" required>
-    </div>
-    <div>
-        <label for="disquera">Disquera: </label>
-        <input type="text" id="disquera" name="disquera" value="{{ album.disquera }}" required>
-    </div>
-    <button type="submit" class="btn-edit">
-        <i class="fas fa-plus"></i> Editar
-    </button>
-</form>
+</body>
+
+</html>
+
+
+
