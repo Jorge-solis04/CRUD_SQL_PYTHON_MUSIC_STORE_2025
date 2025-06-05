@@ -119,8 +119,28 @@ body {
   position: relative;
   z-index: 1;
   animation: fadeIn 0.5s;
-  max-height: 80vh;
+  max-height: 90vh;
   overflow-y: auto; 
+}
+
+
+.contenido {
+  scrollbar-width: none; 
+}
+
+.contenido::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+
+.contenido::-webkit-scrollbar-thumb {
+  background: #e0e0e0;
+  border-radius: 4px;
+}
+
+/* Para Firefox */
+.contenido {
+  scrollbar-width: none;
 }
 
 /* Flex container para formulario y lista */
@@ -284,17 +304,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Pie de página */
-.pie {
-  background: rgba(40, 44, 52, 0.9);
-  color: #fff;
-  padding: 25px 20px;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-  backdrop-filter: blur(5px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
+
 
 /* Responsive */
 @media (max-width: 768px) {
