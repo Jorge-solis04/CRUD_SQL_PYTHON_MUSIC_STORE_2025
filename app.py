@@ -462,6 +462,7 @@ def updateAlbum(idAlbum):
     conn.commit()
     return redirect(url_for("albumes"))
 
+#Jorge es un gilipollas 
 
 def status_401(error):
     return redirect(url_for('login'))
