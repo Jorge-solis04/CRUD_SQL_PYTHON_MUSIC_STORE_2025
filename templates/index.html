@@ -31,18 +31,26 @@
           <h3>Bienvenido {{current_user.fullname}}</h3>
         </div>
       </div>
-      <div class="btn-logout-div">
-        <a href="{{ url_for('logout') }}" class="btn-logout" >
+      <div class="btn-logout-div" style="position: absolute; top: 20px; right: 30px;">
+        <a href="{{ url_for('logout') }}" class="btn-logout">
           <i class="fas fa-sign-out-alt"></i> Logout
         </a>
       </div>
     </header>
 
     <section class="filtro">
-      <a href="/Artistas" class="filtro-link"><i class="fas fa-user"></i> Artistas</a>
-      <a href="/albumes" class="filtro-link"><i class="fas fa-compact-disc"></i> Albumes</a>
-      <a href="/products" class="filtro-link"><i class="fas fa-guitar"></i> Productos</a>
-      <a href="/ventas" class="filtro-link"><i class="fas fa-shopping-cart"></i> Ventas</a>
+      <a href="/Artistas" class="filtro-link"
+        ><i class="fas fa-user"></i> Artistas</a
+      >
+      <a href="/albumes" class="filtro-link"
+        ><i class="fas fa-compact-disc"></i> Albumes</a
+      >
+      <a href="/products" class="filtro-link"
+        ><i class="fas fa-guitar"></i> Productos</a
+      >
+      <a href="/ventas" class="filtro-link"
+        ><i class="fas fa-shopping-cart"></i> Ventas</a
+      >
     </section>
 
     <main class="contenido">
@@ -108,13 +116,6 @@
                 class="btn-edit"
               >
                 <i class="fas fa-edit"></i> Editar
-              </a>
-              <a
-                href="/delete/{{client.idCliente}}"
-                onclick="borrarCliente()"
-                class="btn-delete"
-              >
-                <i class="fas fa-trash-alt"></i> Borrar
               </a>
             </div>
           </div>
