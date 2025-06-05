@@ -1,19 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
-    const showPasswordBtn = document.getElementById('showPassword');
     const passwordInput = document.getElementById('password');
     
-    // Mostrar/ocultar contraseña
-    showPasswordBtn.addEventListener('click', function() {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        
-        // Cambiar icono
-        const icon = this.querySelector('i');
-        icon.classList.toggle('fa-eye');
-        icon.classList.toggle('fa-eye-slash');
-    });
+
     
+
     // Validación del formulario
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -65,12 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Funciones de ayuda
-    function isValidEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
-    
     function isValidUsername(username) {
         const re = /^[a-zA-Z0-9_]{4,20}$/;
         return re.test(username);
@@ -101,72 +86,17 @@ document.addEventListener('DOMContentLoaded', function() {
             field.style.backgroundColor = '#f9f9f9';
         }, { once: true });
     }
-    
+
+    // Dummy function for email validation (add your own logic if needed)
+    function isValidEmail(email) {
+        // Simple email regex
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    // Dummy function for success message (implement as needed)
     function showSuccessMessage() {
-        // Crear elemento de mensaje de éxito
-        const successMsg = document.createElement('div');
-        successMsg.className = 'success-message';
-        successMsg.innerHTML = `
-            <div class="success-content">
-                <i class="fas fa-check-circle"></i>
-                <p>¡Inicio de sesión exitoso!</p>
-            </div>
-        `;
-        
-        // Estilos dinámicos
-        successMsg.style.position = 'fixed';
-        successMsg.style.top = '0';
-        successMsg.style.left = '0';
-        successMsg.style.width = '100%';
-        successMsg.style.height = '100%';
-        successMsg.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-        successMsg.style.display = 'flex';
-        successMsg.style.justifyContent = 'center';
-        successMsg.style.alignItems = 'center';
-        successMsg.style.zIndex = '1000';
-        successMsg.style.animation = 'fadeIn 0.3s';
-        
-        // Estilos del contenido
-        const successContent = successMsg.querySelector('.success-content');
-        successContent.style.textAlign = 'center';
-        successContent.style.color = 'white';
-        successContent.style.padding = '30px';
-        successContent.style.borderRadius = '10px';
-        successContent.style.backgroundColor = 'rgba(39, 174, 96, 0.9)';
-        successContent.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
-        
-        // Icono
-        const icon = successMsg.querySelector('i');
-        icon.style.fontSize = '50px';
-        icon.style.marginBottom = '20px';
-        icon.style.display = 'block';
-        icon.style.color = 'white';
-        
-        // Agregar al documento
-        document.body.appendChild(successMsg);
-        
-        // Redirigir después de 2 segundos (simulación)
-        setTimeout(() => {
-            // window.location.href = 'dashboard.html';
-            successMsg.style.animation = 'fadeOut 0.3s';
-            setTimeout(() => {
-                successMsg.remove();
-                loginForm.reset();
-            }, 300);
-        }, 2000);
+        alert('¡Inicio de sesión exitoso!');
     }
     
-    // Agregar estilos de animación dinámicamente
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-    `;
-    document.head.appendChild(style);
 });
