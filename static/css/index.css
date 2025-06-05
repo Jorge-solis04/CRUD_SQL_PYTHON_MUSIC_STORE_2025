@@ -6,17 +6,27 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
   color: #2c3e50;
   line-height: 1.6;
@@ -100,7 +110,7 @@ body {
 }
 
 .logo h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 5px;
@@ -165,8 +175,8 @@ body {
   position: relative;
   z-index: 1;
   animation: fadeIn 0.5s;
-  max-height: 80vh;      /* Altura máxima visible */
-  overflow-y: auto; 
+  max-height: 80vh; /* Altura máxima visible */
+  overflow-y: auto;
 }
 
 .info-cliente {
@@ -216,7 +226,8 @@ body {
   min-width: 120px;
 }
 
-.btn-edit, .btn-delete {
+.btn-edit,
+.btn-delete {
   padding: 12px 15px;
   border: none;
   border-radius: 8px;
@@ -262,7 +273,7 @@ body {
   background: #fff;
   padding: 28px 22px;
   border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
   min-width: 260px;
   max-width: 320px;
   width: 100%;
@@ -351,23 +362,24 @@ body {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .filter-container {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .info-cliente {
     flex-direction: column;
   }
-  
+
   .botones {
     flex-direction: row;
     margin-top: 20px;
     justify-content: space-between;
   }
-  
-  .btn-edit, .btn-delete {
+
+  .btn-edit,
+  .btn-delete {
     width: 48%;
   }
 }
@@ -376,20 +388,21 @@ body {
   .encabezado {
     padding: 20px 15px;
   }
-  
+
   .logo h1 {
     font-size: 24px;
   }
-  
+
   .info-cliente {
     padding: 20px 15px;
   }
-  
+
   .botones {
     flex-direction: column;
   }
-  
-  .btn-edit, .btn-delete {
+
+  .btn-edit,
+  .btn-delete {
     width: 100%;
   }
 }
@@ -402,4 +415,56 @@ body {
   .formulario-agregar {
     max-width: 100%;
   }
+}
+
+.filtro {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0 1.5rem 0;
+  padding: 1rem 0;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+}
+.filtro-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.6rem 1.3rem;
+  border-radius: 2rem;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.filtro-link i {
+  font-size: 1.1em;
+}
+.filtro-link:hover,
+.filtro-link:focus {
+  background: #4e54c8;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(78, 84, 200, 0.13);
+}
+
+.btn-logout-div {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.btn-logout {
+  background: #e74c3c;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: background 0.2s;
 }
